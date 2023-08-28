@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { FormEvent, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import  styles  from './index.module.css'
 import { BiSearch } from 'react-icons/bi'
 
@@ -21,6 +21,8 @@ interface DataProps{
 export function Home(){
 
     const [coins, setCoins] = useState<CoinProps[]>([]);
+    const [inputValue, setInputValue] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         function getData() {
@@ -53,11 +55,20 @@ export function Home(){
         
     }, [])
 
+    function handleSearch(e: FormEvent){
+        e.preventDefault();
+        if(inputValue === "") return;
+
+        navigate(`/detail/${inputValue}`)
+    }
+
     return(
         <main className={styles.container}>
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleSearch}>
                 <input 
                     placeholder="Dígite o simbolo da moeda: BTC..."
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                 />
                 <button type="submit">
                     <BiSearch size={30} color="#fff"/>
